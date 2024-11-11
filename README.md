@@ -8,3 +8,5 @@
 #In the Degree and Master folders you will find different works, where ‘gx’ refers to ‘degree’ and ‘x’ to the course in which I did the corresponding internship, and ‘m1’ to the works done during my master.
 
 #If you have any questions, you can send me an email to afloto@alumni.uv.es, f92fltoa@correo.ugr.es 
+
+#Currently most of the files are in Spanish, I will be uploading them in English.
