@@ -1,10 +1,10 @@
 # degree-and-master
-#En este repositorio he añadido todos los trabajos de interés realizados durante la carrera de Física y el máster de Física Avanzada.
+#In this repository I have added all the works of interest done during the Physics degree and the master's degree in Advanced Physics.
 
-#Hay trabajos de distintas temáticas, espero que alguno pueda ser de tu interés :). 
+#There are works on different topics, I hope some of them can be of interest to you :).
 
-#En la carpeta investigaciones se encuentra lo más interesante, que son mi TFG, TFM, estancia en Roma y la investigación realizada a partir de una beca que me fue concedida. 
+#In the research folder you can find the most interesting ones, which are my TFG, TFM, stay in Rome and the research carried out with a grant I was awarded.
 
-#En las carpetas Degree y Master se presentan diversos trabajos, refiriéndose 'gx' a 'grado' y 'x' al curso en el que realicé la práctica correspondiente, y 'm1' a los trabajos realizados durante mi máster.
+#In the Degree and Master folders you will find different works, where ‘gx’ refers to ‘degree’ and ‘x’ to the course in which I did the corresponding internship, and ‘m1’ to the works done during my master.
 
-#Cualquier duda, puedes mandarme un correo a afloto@alumni.uv.es, f92fltoa@correo.ugr.es 
+#If you have any questions, you can send me an email to afloto@alumni.uv.es, f92fltoa@correo.ugr.es 
