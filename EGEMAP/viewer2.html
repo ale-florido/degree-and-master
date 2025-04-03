@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+ 
+        <!-- Styles -->
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+        <!-- Font Awesome -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+ 
+        <!-- OpenLayers library -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.1.0/ol.css">
+ 
+        <!-- Styles for the application -->
+        <link rel="stylesheet" href="./images/viewer.css" type="text/css"/>
+ 
+        <!-- Application icon -->
+        <link rel="icon" href="./images/logolab.png" type="image/png">
+ 
+        <title>Burundi | Market Analytics</title>
+
+        <style>
+            .navbar-nav .nav-link {
+                text-decoration: none; /* Elimina el subrayado por defecto */
+                color: black; /* Asegura que el texto sea negro */
+            }
+            .navbar-brand2:hover {
+        background-color: #000 !important;
+        color: #fff !important;
+        text-decoration: none;
+    }
+    
+            .navbar-nav .nav-link:hover {
+                text-decoration: underline; /* Agrega subrayado al pasar el ratón */
+                text-decoration-color: black; /* Cambia el color del subrayado a negro */
+                background-color: transparent; /* Asegúrate de que no haya fondo */
+                color: black; /* Mantiene el texto en negro al pasar el ratón */
+            }
+             /* Estilos para los enlaces en el footer */
+            footer a {
+            text-decoration: none; /* Elimina el subrayado por defecto */
+            color: black; /* Asegura que el texto sea negro */
+            margin: 0 10px; /* Espaciado entre los enlaces */
+            }
+
+            footer a:hover {
+            text-decoration: underline; /* Agrega subrayado al pasar el ratón */
+            text-decoration-color: black; /* Cambia el color del subrayado a negro */
+            background-color: transparent; /* Asegúrate de que no haya fondo */
+            color: black; /* Mantiene el texto en negro al pasar el ratón */
+            }
+             /* Estilos para el encabezado de la tarjeta */
+            .card-header {
+            background-color: black; /* Cambia el fondo del encabezado a negro */
+            color: white; /* Cambia el color del texto a blanco */
+            }
+
+            /* Asegúrate de que el icono de cerrar también sea visible */
+            .card-header .close-icon {
+            color: white; /* Cambia el color del icono a blanco */
+            }
+             /* Estilo para el iframe */
+        #map {
+            width: 100%; /* Ancho del mapa */
+            height: 600px; /* Altura del mapa */
+            border: none; /* Sin borde */
+        }
+        
+        
+        </style>
+
+    </head>
+
+    <body onload="init()" >
+        <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://egemap.eu/">
+                    <img src="./images/logolab.png" alt="Icono Lab" style="height: 60px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="https://www.fbbva.es/">
+                    <img src="./images/BBVA-Logo.png" alt="Icono Lab" style="height: 60px;">
+                </a>
+                <a class="navbar-brand2" href="viewer2.html" 
+   style="text-decoration: none; 
+          padding: 8px 12px;
+          color: #000;
+          transition: all 0.3s ease;
+          border-radius: 4px;">
+    Home
+</a>
+                
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item position-relative">
+                            <a class="nav-link" href="#" onclick="toggleDropdown(event)">Vineyards in Spain</a>
+                            <div id="dropdown" class="dropdown-content" style="display: none;">
+                                <button class="dropdown-button" onclick="showSubmenu(event, 'limestones')">Limestones</button>
+                                <button class="dropdown-button" onclick="showSubmenu(event, 'badajoz')">Badajoz</button>
+                                <button class="dropdown-button" onclick="showSubmenu(event, 'leon')">León</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+        <!-- Submenú único para todos los elementos -->
+        <div id="submenu" class="submenu-container" style="display: none;"></div>
+
+        <div id="result" style="margin-top: 20px;"></div>
+
+
+        <div id="pnl-basemap" class="card panel panel-tool">
+            <div class="card-header">
+              Base layer
+              <span class="pull-right clickable close-icon" data-effect="fadeOut"><i class="fa fa-times"></i></span>
+            </div>
+            <div class="card-body">
+                <form>          
+                    <div class="form-group">            
+                        <div class="form-check">
+                            <input id="base-osm" type="radio" name="basemap" class="form-check-input" value="osm" checked/><label for="base-osm">OpenStreetMap</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="base-otm" type="radio" name="basemap" class="form-check-input" value="otm"/><label for="base-otm">OpenTopoMap</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="base-esri-wtm" type="radio" name="basemap" class="form-check-input" value="esri_wtm"/><label for="base-esri-wtm">ESRI World Topo Map</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="base-esri-natgeo" type="radio" name="basemap" class="form-check-input" value="esri_natgeo"/><label for="base-esri-natgeo">ESRI NatGeo World Map</label>
+                        </div>
+                        <div class="form-check">  
+                            <input id="base-own" type="radio" name="basemap" class="form-check-input" value="own"/><label for="base-own">Own tile service</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="pnl-about" class="card panel panel-info">
+            <div class="card-header">
+                <strong>About</strong>
+                <span class="pull-right clickable close-icon" data-effect="fadeOut"><i class="fa fa-times"></i></span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Study of soil erosion in different vineyards in Spain.
+                    <br/><br/>
+                    Web application developed as an academic exercise by <a href="mailto:f92fltoa@correo.ugr.es">f92fltoa@correo.ugr.es</a>.
+                </p>
+            </div>
+        </div>
+
+        <div id="pnl-contact" class="card panel panel-info">
+            <div class="card-header">
+                <strong>Contact</strong>
+                <span class="pull-right clickable close-icon" data-effect="fadeOut"><i class="fa fa-times"></i></span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    For more information about <strong>EGEMAP (Environment, Geography and Mapping topics)</strong> visit <a href="https://egemap.eu/">https://egemap.eu</a>. <br/><br/>
+                    You can contact us at <a href="mailto:egemap@ugr.es">egemap@ugr.es</a>
+                </p>
+            </div>
+        
+            
+        </div>
+
+        <div style="position: fixed; top: 85px; left: 0; width: 100%; height: 2px; background: black; z-index: 1031;"></div>
+
+        <iframe id="map" src="images/mi_mapa.html" ></iframe>
+
+        <footer class="fixed-bottom bg-light" style="border-top: 2px solid #000;">
+            <div class="container-fluid d-flex justify-content-center">
+                <a href="#" onclick="showPanel('pnl-about')">About</a>
+                <a href="#" onclick="showPanel('pnl-contact')">Contact</a>
+            </div>
+        </footer>
+        <!-- Scripts -->
+        <!-- JQuery library -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        
+        <!-- Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Openlayers -->
+        <script src="https://cdn.jsdelivr.net/npm/ol@v8.1.0/dist/ol.js"></script>
+        
+        <!-- Own script -->
+        <script src="./images/viewer.js"></script>
+    </body>
+    <style>
+        .dropdown-content {
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            padding: 5px;
+            top: 1.74cm;
+        }
+        
+
+        .dropdown-button, .submenu-button {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: 1px solid black;
+            background: none;
+            cursor: pointer;
+            margin: 2px 0;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .dropdown-button:hover, .submenu-button:hover {
+            background-color: #ddd;
+            border-color: black;
+        }
+
+        .submenu-container {
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            position: absolute;
+            z-index: 2;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        
+        .position-relative {
+            position: relative;
+        }
+    </style>
+    <script>
+const menuConfig = {
+        'limestones': {
+            options: [
+                { 
+                    text: 'Limestones (40 years with ploughing)', 
+                    file: 'images/prueba_limestones.html' 
+                } //,
+//                { 
+//                    text: 'Opción 2', 
+//                    file: 'images/prueba_limestones.html'
+//                }
+            ],
+            action: 'showContent2'
+        },
+        'badajoz': {
+            options: ['Badajoz Opción 1'],
+            action: 'showContent'
+        },
+        'leon': {
+            options: ['León Opción A', 'León Opción B', 'León Opción C'],
+            action: 'showContent3'
+        }
+    };
+
+    // Función para mostrar submenús
+    function showSubmenu(event, menuKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Mostrar menú principal si está oculto
+        const dropdown = document.getElementById("dropdown");
+        if (dropdown.style.display === "none") {
+            dropdown.style.display = "block";
+        }
+        
+        const config = menuConfig[menuKey];
+        if (!config) return;
+        
+        const submenu = document.getElementById("submenu");
+        submenu.innerHTML = '';
+        
+        config.options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'submenu-button';
+            button.textContent = typeof option === 'object' ? option.text : option;
+            button.onclick = function(e) {
+                e.stopPropagation();
+                window[config.action](option);
+                hideAllSubmenus();
+            };
+            submenu.appendChild(button);
+        });
+        
+        const btn = event.currentTarget;
+        const btnRect = btn.getBoundingClientRect();
+        submenu.style.position = "absolute";
+        submenu.style.left = (btnRect.left - 297) + "px";
+        submenu.style.top = (btnRect.top + 20) + "px";
+        submenu.style.display = "block";
+        
+        return false;
+    }
+
+    // Función para ocultar todos los submenús
+    function hideAllSubmenus() {
+        document.getElementById("dropdown").style.display = "none";
+        document.getElementById("submenu").style.display = "none";
+    }
+
+    // Función para alternar el menú principal
+    function toggleDropdown(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const dropdown = document.getElementById("dropdown");
+        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+        
+        // Ocultar submenú cuando se abre/cierra el menú principal
+        document.getElementById("submenu").style.display = "none";
+        return false;
+    }
+
+    // Función para mostrar contenido
+    function showContent(mapUrl) {
+        const iframe = document.getElementById("map");
+        iframe.src = mapUrl;
+    }
+
+    // Función para mostrar contenido específico
+    function showContent2(optionInfo) {
+        if (typeof optionInfo === 'object' && optionInfo.file) {
+            const iframe = document.getElementById("map");
+            iframe.src = optionInfo.file;
+        } else if (typeof optionInfo === 'string') {
+            // Código original para manejar ciudades
+            try {
+                fetch('/generate_map', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ city: optionInfo }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (response.ok) {
+                        document.getElementById("map").src = data.map_url;
+                    }
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    }
+
+    // Función para León
+    function showContent3(option) {
+        console.log("Opción seleccionada:", option);
+        // Implementa la lógica específica para León
+    }
+
+    // Cerrar menús al hacer clic fuera
+    document.addEventListener('click', hideAllSubmenus);
+    </script>
+</html>
