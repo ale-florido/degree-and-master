@@ -1,0 +1,17 @@
+# Paquetes principales
+fastapi   
+uvicorn
+python-dotenv
+
+# Base de datos y ORM
+sqlalchemy
+pydantic
+
+# Controladores de bases de datos (elige los que necesites)
+psycopg2-binary         #PostgreSQL
+mysql-connector-python  #MySQL
+pyodbc                  #SQL Srver, Azur SQL
+aiosqlite               #SQLite
+
+# Utilidades adicionales
+fastmcp          
